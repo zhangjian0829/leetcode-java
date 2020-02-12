@@ -1,1 +1,67 @@
+首先尝试用深度优先搜索（DFS）来做，深度优先搜索可以找到从任何单元格开始的最长递增路径，
+我们可以对全部单元格进行深度优先搜索。
 
+解法一：
+public class Solution {
+    private int m, n;
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        m = matrix.length;
+        n = matrix[0].length;
+        int dp = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp = Math.max(dp, dfs(matrix, i, j));
+            }
+        }
+        return dp;
+    }
+
+    public int dfs(int[][] matrix, int i, int j) {
+        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int ans = 0;
+        for (int[] d : dirs) {
+            int x = i + d[0], y = j + d[1];
+            if (0 <= x && x < m && 0 <= y && y < n && matrix[x][y] > matrix[i][j])
+                ans = Math.max(ans, dfs(matrix, x, y));
+        }
+        return ++ans;
+    }
+}
+
+显而易见，该方法肯定不能ac，尝试去做一些优化。该方法重复计算过多，可以采用记忆化的方法。在计算中
+，记忆化是一种优化技术，它通过存储“昂贵”的函数调用的结果，在相同的输入再次出现时返回缓存的结果，
+以此加快程序的速度。
+
+解法二：
+public class Solution {
+    private int m, n;
+    private static final int [][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        m = matrix.length;
+        n = matrix[0].length;
+        int[][] cache=new int[m][n];
+        int dp = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp = Math.max(dp, dfs(matrix, i, j,cache));
+            }
+        }
+        return dp;
+    }
+
+    public int dfs(int[][] matrix, int i, int j,int[][] cache) {
+        if(cache[i][j]!=0) return cache[i][j];
+        for (int[] d : dirs) {
+            int x = i + d[0], y = j + d[1];
+            if (0 <= x && x < m && 0 <= y && y < n && matrix[x][y] > matrix[i][j])
+                cache[i][j] = Math.max(cache[i][j], dfs(matrix, x, y,cache));
+        }
+        return ++cache[i][j];
+    }
+}
+
+在代码的过程中，把dirs分别定义为成员变量和局部变量，可以比较一下运行时间和占用内存大小。
