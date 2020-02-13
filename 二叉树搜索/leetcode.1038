@@ -1,1 +1,14 @@
+显而易见，采用中序遍历的方式
+public class Solution {
+    private int fillAndGetMax(TreeNode root, int b) {
+        if (root == null)
+            return b;
+        root.val += fillAndGetMax(root.right, b);
+        return fillAndGetMax(root.left, root.val);
+    }
 
+    public TreeNode bstToGst(TreeNode root) {
+        fillAndGetMax(root, 0);
+        return root;
+    }
+}
