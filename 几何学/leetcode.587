@@ -1,0 +1,46 @@
+这道题难度是困难题，而且分类为几何学题目，我的天啦，怎么这么难，完全没有思路。。。
+好吧，只能看看官方解答了，乍一看有三种算法，哇，三种算法一种没听说。。
+本着代码长度最短的原则，选择了解法三
+需要理解的点：对每一个点p，我们试图找到一个点q，满足点q是所有点中相对于p点逆时针方向最近的点。
+准备粘贴图片过来助于理解，好像不太行。。只能打字了。。
+P(px,py) Q(qx,qy),r(rx,ry) 如何判断Q点和r点谁是离P点逆时针方向最近的点
+计算（qx-px）(ry-py)-(rx-px)(qy-py)值的大小其实就是比较斜率。。
+所有点连接起来就是一个hull（凸壳。。），程序分为上凸壳和下凸壳俩部分。
+将每个点按照横坐标的大小排列，依次遍历
+public class Solution {
+    public int orientation(Point p, Point q, Point r) {
+        return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+    }
+
+    public List<Point> outerTrees(Point[] points) {
+        Arrays.sort(points, new Comparator<Point>() {
+            @Override
+            public int compare(Point o1, Point o2) {
+                return o2.x - o1.x == 0 ? o2.y - o1.y : o1.x - o2.x;
+            }
+        });
+        Stack<Point> hull = new Stack<>();
+        for (int i = 0; i < points.length; i++) {
+            while (hull.size() >= 2 && orientation(hull.get(hull.size() - 2), hull.get(hull.size() - 1), points[i]) > 0)
+                hull.pop();
+            hull.push(points[i]);
+        }
+        hull.pop();
+        for (int i = points.length - 1; i >= 0; i--) {
+            while (hull.size() >= 2 && orientation(hull.get(hull.size() - 2), hull.get(hull.size() - 1), points[i]) > 0)
+                hull.pop();
+            hull.push(points[i]);
+        }
+        return new ArrayList<>(new HashSet<>(hull));
+    }
+}
+把官方解答copy过来，compare函数与官方解答稍微有点不一致，x应该按照升序排列，开开心心去验证，发现竟然无法通过。。
+incompatible types: int[][] cannot be converted to Point[] [in __Driver__.java]
+自己用IDEA验证了下，确实是可行的
+验证部分代码：
+public static void main(String[] args) {
+        Point[] points = {new Point(1, 1), new Point(2, 2), new Point(2, 0),
+                new Point(2, 4), new Point(3, 3), new Point(4, 2)};
+        Solution s1 = new Solution();
+        System.out.println(s1.outerTrees(points));
+    }
