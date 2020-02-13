@@ -35,7 +35,8 @@ public class Solution {
     }
 }
 把官方解答copy过来，compare函数与官方解答稍微有点不一致，x应该按照升序排列，开开心心去验证，发现竟然无法通过。。
-incompatible types: int[][] cannot be converted to Point[] [in __Driver__.java]
+incompatible types: int[][] cannot be converted to Point[] [in __Driver__.java]，缺少java.awt这个包。。
+
 自己用IDEA验证了下，确实是可行的
 验证部分代码：
 public static void main(String[] args) {
