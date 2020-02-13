@@ -1,0 +1,67 @@
+把X看作空格，L只能左移，R只能右移，解法如下：
+public class Solution {
+    public boolean canTransform(String start, String end) {
+        int i = 0, j = 0;
+        while (i < start.length() && j < end.length()) {
+            while (i < start.length() - 1 && start.charAt(i) == 'X')
+                i++;
+            while (j < end.length() - 1 && end.charAt(j) == 'X')
+                j++;
+            if (start.charAt(i) != end.charAt(j))
+                return false;
+            else if (start.charAt(i) == 'R' && end.charAt(j) == 'R' && i > j)
+                return false;
+            else if (start.charAt(i) == 'L' && end.charAt(j) == 'L' && i < j)
+                return false;
+            i++;
+            j++;
+        }
+        return true;
+    }
+}
+把start.length()定义为int l,进一步的节省内存空间
+一个小小的改动可能性能就会提升很大，编程中应该多多注意，编程珠玑这本书还是得再去读一读，理解理解。
+public class Solution {
+    public boolean canTransform(String start, String end)    {
+        int l=start.length();
+        int i = 0, j = 0;
+        while (i < l && j < l) {
+            while (i < l - 1 && start.charAt(i) == 'X')
+                i++;
+            while (j < l - 1 && end.charAt(j) == 'X')
+                j++;
+            if (start.charAt(i) != end.charAt(j))
+                return false;
+            else if (start.charAt(i) == 'R' && i > j)
+                return false;
+            else if (start.charAt(i) == 'L' && i < j)
+                return false;
+            i++;
+            j++;
+        }
+        return true;
+    }
+}
+本着再去提升性能的想法，可以对charAt函数再去做改进，采用 char[] S = start.toCharArray(), T=end.toCharArray();
+public class Solution {
+    public boolean canTransform(String start, String end)    {
+        int l=start.length();
+        int i = 0, j = 0;
+        char[] S = start.toCharArray(), T=end.toCharArray();
+        while (i < l && j < l) {
+            while (i < l - 1 && S[i] == 'X')
+                i++;
+            while (j < l - 1 && T[j] == 'X')
+                j++;
+            if (S[i] != T[j])
+                return false;
+            else if (S[i] == 'R' && i > j)
+                return false;
+            else if (S[i] == 'L' && i < j)
+                return false;
+            i++;
+            j++;
+        }
+        return true;
+    }
+}
