@@ -1,1 +1,27 @@
+第一步，构建邻接矩阵，其实就是画出课程之间的关系图，0->1或者[1,0]意味着要想学习1课程必须先学习0课程。
+第二步，生成入度表，就是判断学习该课程之前要学习的其他课程的数目
+将入度为0的课程放入队列中，删除其出度并将课程数目减一，并将新的入度为0的课程放入队列中，一直循环
+最后判断课程数目是否为0，即可判断是否存在环形结构。
 
+class Solution{
+    public boolean canFinish(int numCourses,int[][] prep){
+        int[] indegrees = new int[numCourses];
+        for(int[] p : prep){
+            indegrees[p[0]]++;
+        }
+        LinkedList<Integer> queue = new LinkedList<>();
+        for(int i = 0;i<numCourses;i++){
+            if(indegrees[i]==0) queue.addLast(i);
+        }
+        while(!queue.isEmpty()){
+          int pre=queue.removeFirst();
+          numCourses--;
+          for(int[] res:prep){
+            if(res[1]!=pre) continue;
+            if(--indegrees[res[0]]==0) queue.add(res[0]);
+          }
+        }
+        return numCourses==0;
+    }
+}
+还是得少用IDEA,这样熟悉度才会提升。
