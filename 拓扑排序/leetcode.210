@@ -1,0 +1,28 @@
+在207的基础上new一个新数组，依次存储入度为0的课程
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegrees=new int[numCourses];
+        for(int[] p:prerequisites){
+            indegrees[p[0]]++;
+        }
+        LinkedList<Integer> queue=new LinkedList<>();
+        for(int i=0;i<numCourses;i++){
+            if(indegrees[i]==0)
+                queue.addLast(i); 
+        }
+        int[] res=new int[numCourses];
+        int j=0;
+        while(!queue.isEmpty()){
+            int pre=queue.removeFirst();
+            res[j++]=pre;
+            numCourses--;
+            for(int[] pr:prerequisites){
+                if(pr[1]!=pre) continue;
+                if(--indegrees[pr[0]]==0){
+                    queue.add(pr[0]);
+                }
+            }
+        }
+        if (numCourses==0)  return res;
+        else  return new int[0];
+    }
